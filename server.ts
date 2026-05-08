@@ -72,6 +72,42 @@ app.delete("/items/:id",  (req: Request, res: Response)=>{
 })
 
 
+app.put("/items/:id",  (req: Request, res: Response)=>{
+    const {id} = req.params
+    const { newName, newDescription, newPrice } = req.body
+    if(!(newName || newDescription || newPrice)){
+        return res.status(400).json({message: "Bad request"})
+    }
+    let db : Item[]
+    fs.readFile("./db.json", "utf8", async (err, data)=>{
+        if(err){
+            console.error(err.message)
+            return res.status(500).json({message: "Something went wrong on the server side", error: err.message})
+        }
+        db = await JSON.parse(data)
+        const item = db.find(obj=> obj.id === id)
+        if(!item){
+            return res.status(404).json({message: "Item not found"})
+        }
+        const updatedItem = {
+            id,
+            name: newName? newName : item.name,
+            description : newDescription? newDescription : item.description,
+            price: newPrice ? newPrice : item.price
+        }
+        
+        const newdb = db.map(item=> (item.id===id? updatedItem : item))
+
+        fs.writeFile("./db.json", JSON.stringify(newdb), (err)=>{
+            if(err){
+                return res.status(500).json({message: "something went wrong on the server side", error: err.message})
+            }
+            res.status(200).json({message: "Item updated successfully"})
+        })
+
+    })
+})
+
 app.listen(3000, ()=>{
     console.log("Server is running on port: 3000")
 })
