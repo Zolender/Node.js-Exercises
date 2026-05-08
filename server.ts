@@ -62,7 +62,12 @@ app.delete("/items/:id",  (req: Request, res: Response)=>{
             return res.status(404).json({message: "Item not found"})
         }
         const newdb = db.filter(item=> item.id !== id)
-        res.status(200).json({message: "Item deleted successfully"})
+        fs.writeFile("./db.json", JSON.stringify(newdb), (err)=>{
+            if(err){
+                return res.status(500).json({message: "something went wrong on the server side", error: err.message})
+            }
+            res.status(200).json({message: "Item deleted successfully"})
+        })
     })
 })
 
