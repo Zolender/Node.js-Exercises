@@ -8,7 +8,7 @@ const app = express()
 app.use(express.json())
 let counter = 1
 
-app.get("/items", async (req: Request, res: Response)=>{
+app.get("/items", (req: Request, res: Response)=>{
     fs.readFile("./db.json", "utf8", (err, data)=>{
         if(err){
             console.error(err.message)
@@ -48,10 +48,10 @@ function isValidItem(obj: any): boolean{
     return ( typeof obj.name === "string" && typeof obj.description=== "string" && typeof obj.price === "number" )
 }
 
-app.delete("/items/:id",  (req: Request, res: Response)=>{
+app.delete("/items/:id", (req: Request, res: Response)=>{
     const {id} = req.params
     let db : Item[]
-    fs.readFile("./db.json", "utf8", async (err, data)=>{
+    fs.readFile("./db.json", "utf8", (err, data)=>{
         if(err){
             console.error(err.message)
             return res.status(500).json({message: "Something went wrong on the server side", error: err.message})
