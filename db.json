@@ -1,1 +1,8 @@
-{"name":"A gun","description":"A killing weapon","price":40000,"id":"d2e7aec6-b0bc-473b-b692-c35e86732010"}
+[
+    {
+        "id": "62f120fc-bb28-474c-9ed7-28ee5da7257b",
+        "name": "A bible",
+        "description": "God's word to the human kind",
+        "price": 423484
+    }
+]

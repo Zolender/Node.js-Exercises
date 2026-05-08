@@ -22,19 +22,17 @@ app.get("/", async (req: Request, res: Response)=>{
 })
 
 app.post("/create", (req: Request, res: Response)=>{
-    const data = {...req.body, id: randomUUID()}
-    if(!isValidItem(data)){
-        res.status(400).json({message: "Bad request, try again later"})
-    }else{
-        fs.writeFile("./db.json", JSON.stringify(data), (err)=>{
-            if(err){
-                console.error(err.message)
-                res.status(500).json({message: "Something went wrong on the server side. Try sth else in the meantime"})
-                return
-            }
-        })
-        res.status(201).json({message: "post created successfully!"})
+    const newItem = {...req.body, id: randomUUID()}
+    if(!isValidItem(newItem)){
+        return res.status(404).json({message: "Bad request, try again"})
     }
+    fs.writeFile("./db.json", JSON.stringify(newItem), { flag : "a"}, (err)=>{
+        if(err){
+            console.error(err)
+            return res.status(500).json({message: `Something went wrong: ${err}`})
+        }
+    })
+
 })
 
 function isValidItem(obj: Object): boolean{
