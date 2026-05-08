@@ -2,13 +2,13 @@ import express from "express";
 import fs from "fs"
 import { Response, Request } from "express";
 import { Item } from "./types/item";
-import { randomUUID } from "crypto";
 
 
 const app = express()
 app.use(express.json())
+let counter = 1
 
-app.get("/", async (req: Request, res: Response)=>{
+app.get("/items", async (req: Request, res: Response)=>{
     fs.readFile("./db.json", "utf8", (err, data)=>{
         if(err){
             console.error(err.message)
@@ -21,8 +21,8 @@ app.get("/", async (req: Request, res: Response)=>{
     })
 })
 
-app.post("/create", (req: Request, res: Response)=>{
-    const newItem = {...req.body, id: randomUUID()}
+app.post("/items/create", (req: Request, res: Response)=>{
+    const newItem = {...req.body, id: counter++}
     if(!isValidItem(newItem)){
         return res.status(404).json({message: "Bad request, try again"})
     }
@@ -47,6 +47,24 @@ app.post("/create", (req: Request, res: Response)=>{
 function isValidItem(obj: Object): boolean{
     return ( obj.hasOwnProperty("id") && obj.hasOwnProperty("name") && obj.hasOwnProperty("description") && obj.hasOwnProperty("price"))
 }
+
+app.delete("/items/:id",  (req: Request, res: Response)=>{
+    const {id} = req.params
+    let db : Item[]
+    fs.readFile("./db.json", "utf8", async (err, data)=>{
+        if(err){
+            console.error(err.message)
+            return res.status(500).json({message: "Something went wrong on the server side", error: err.message})
+        }
+        db = await JSON.parse(data)
+        const item = db.find(obj=> obj.id=== id)
+        if(!item){
+            return res.status(404).json({message: "Item not found"})
+        }
+        const newdb = db.filter(item=> item.id !== id)
+        res.status(200).json({message: "Item deleted successfully"})
+    })
+})
 
 
 app.listen(3000, ()=>{
