@@ -22,7 +22,7 @@ app.get("/items", async (req: Request, res: Response)=>{
 })
 
 app.post("/items", (req: Request, res: Response)=>{
-    const newItem = {...req.body, id: counter++}
+    const newItem = {...req.body, id: String(counter++)}
     if(!isValidItem(newItem)){
         return res.status(400).json({message: "Bad request, try again"})
     }
@@ -44,8 +44,8 @@ app.post("/items", (req: Request, res: Response)=>{
     })
 })
 
-function isValidItem(obj: Object): boolean{
-    return ( obj.hasOwnProperty("id") && obj.hasOwnProperty("name") && obj.hasOwnProperty("description") && obj.hasOwnProperty("price"))
+function isValidItem(obj: any): boolean{
+    return ( typeof obj.name === "string" && typeof obj.description=== "string" && typeof obj.price === "number" )
 }
 
 app.delete("/items/:id",  (req: Request, res: Response)=>{
@@ -75,7 +75,7 @@ app.delete("/items/:id",  (req: Request, res: Response)=>{
 app.put("/items/:id",  (req: Request, res: Response)=>{
     const {id} = req.params
     const { newName, newDescription, newPrice } = req.body
-    if(!(newName || newDescription || newPrice)){
+    if(newName=== undefined && newDescription=== undefined && newPrice=== undefined){
         return res.status(400).json({message: "Bad request"})
     }
     let db : Item[]
