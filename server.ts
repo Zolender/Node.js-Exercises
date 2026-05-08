@@ -21,10 +21,10 @@ app.get("/items", async (req: Request, res: Response)=>{
     })
 })
 
-app.post("/items/create", (req: Request, res: Response)=>{
+app.post("/items", (req: Request, res: Response)=>{
     const newItem = {...req.body, id: counter++}
     if(!isValidItem(newItem)){
-        return res.status(404).json({message: "Bad request, try again"})
+        return res.status(400).json({message: "Bad request, try again"})
     }
     fs.readFile("./db.json", "utf8", (err, data)=>{
         if(err){
@@ -56,7 +56,7 @@ app.delete("/items/:id",  (req: Request, res: Response)=>{
             console.error(err.message)
             return res.status(500).json({message: "Something went wrong on the server side", error: err.message})
         }
-        db = await JSON.parse(data)
+        db = JSON.parse(data)
         const item = db.find(obj=> obj.id=== id)
         if(!item){
             return res.status(404).json({message: "Item not found"})
