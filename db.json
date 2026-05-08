@@ -1,8 +1,1 @@
-[
-    {
-        "id": "62f120fc-bb28-474c-9ed7-28ee5da7257b",
-        "name": "A bible",
-        "description": "God's word to the human kind",
-        "price": 423484
-    }
-]
+[{"id":"62f120fc-bb28-474c-9ed7-28ee5da7257b","name":"A bible","description":"God's word to the human kind","price":423484},{"name":"AK-47","description":"A killing machine","price":28923,"id":"7849660b-f501-457d-bb50-302b50f870ec"}]

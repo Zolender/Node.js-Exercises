@@ -26,13 +26,22 @@ app.post("/create", (req: Request, res: Response)=>{
     if(!isValidItem(newItem)){
         return res.status(404).json({message: "Bad request, try again"})
     }
-    fs.writeFile("./db.json", JSON.stringify(newItem), { flag : "a"}, (err)=>{
+    fs.readFile("./db.json", "utf8", (err, data)=>{
         if(err){
-            console.error(err)
-            return res.status(500).json({message: `Something went wrong: ${err}`})
+            console.error(err.message)
+            res.status(500).json({message: "Something went wrong on the server side", error: err.message})
+            return
         }
+        const db = JSON.parse(data)
+        db.push(newItem)
+        fs.writeFile("./db.json", JSON.stringify(db), (err)=>{
+            if(err){
+                console.error(err)
+                return res.status(500).json({message: `Something went wrong: ${err}`})
+            }
+            res.status(201).json({message: "Item created successfully"})
+        })
     })
-
 })
 
 function isValidItem(obj: Object): boolean{
