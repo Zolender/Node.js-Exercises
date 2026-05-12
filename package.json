@@ -1,4 +1,24 @@
 {
+  "name": "mental-model-session-exercise",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec tsx ./server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zolender/Node.js-Exercises.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Zolender/Node.js-Exercises/issues"
+  },
+  "homepage": "https://github.com/Zolender/Node.js-Exercises#readme",
   "dependencies": {
     "express": "^5.2.1"
   },
