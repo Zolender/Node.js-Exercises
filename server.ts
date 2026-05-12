@@ -2,11 +2,11 @@ import express from "express";
 import fs from "fs"
 import { Response, Request } from "express";
 import { Item } from "./types/item";
+import { randomUUID } from "crypto";
 
 
 const app = express()
 app.use(express.json())
-let counter = 1
 
 app.get("/items", (req: Request, res: Response)=>{
     fs.readFile("./db.json", "utf8", (err, data)=>{
@@ -22,7 +22,7 @@ app.get("/items", (req: Request, res: Response)=>{
 })
 
 app.post("/items", (req: Request, res: Response)=>{
-    const newItem = {...req.body, id: String(counter++)}
+    const newItem = {...req.body, id: randomUUID()}
     if(!isValidItem(newItem)){
         return res.status(400).json({message: "Bad request, try again"})
     }
@@ -45,7 +45,7 @@ app.post("/items", (req: Request, res: Response)=>{
 })
 
 function isValidItem(obj: any): boolean{
-    return ( typeof obj.name === "string" && typeof obj.description=== "string" && typeof obj.price === "number" )
+    return ( typeof obj.name === "string" && obj.name.length > 1 && typeof obj.description=== "string" && obj.description.length > 1 && typeof obj.price === "number" )
 }
 
 app.delete("/items/:id", (req: Request, res: Response)=>{
