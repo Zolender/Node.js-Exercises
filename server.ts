@@ -91,12 +91,12 @@ app.put("/items/:id",  (req: Request, res: Response)=>{
         }
         const updatedItem = {
             id,
-            name: newName? newName : item.name,
-            description : newDescription? newDescription : item.description,
-            price: newPrice ? newPrice : item.price
+            name: newName?? item.name,
+            description : newDescription?? item.description,
+            price: newPrice ?? item.price
         }
         
-        const newdb = db.map(item=> (item.id===id? updatedItem : item))
+        const newdb = db.map(item=> (item.id === id? updatedItem : item))
 
         fs.writeFile("./db.json", JSON.stringify(newdb), (err)=>{
             if(err){
